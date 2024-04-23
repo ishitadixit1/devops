@@ -1,0 +1,45 @@
+name: Choose Docker
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        type: choice
+        description: "Select the image"
+        options:
+          - "mongo"
+          - "tomcat"
+          - "cassandra"
+          - "redis"
+          - "postgres"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy Docker Image
+        run: |
+          case ${{ github.event.inputs.name }} in
+            "mongo")
+              docker run -d mongo:latest
+              ;;
+            "tomcat")
+              docker run -d tomcat:latest
+              ;;
+            "cassandra")
+              docker run -d cassandra:latest
+              ;;
+            "redis")
+              docker run -d redis:latest
+              ;;
+            "postgres")
+              docker run -d postgres:latest
+              ;;
+            *)
+              echo "Invalid option selected"
+              exit 1
+              ;;
+          esac
